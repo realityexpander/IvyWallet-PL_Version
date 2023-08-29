@@ -2,17 +2,20 @@ package com.ivy.core.domain.action.exchange
 
 import com.ivy.core.persistence.dao.exchange.ExchangeRateDao
 import com.ivy.core.persistence.entity.exchange.ExchangeRateEntity
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.yield
 
 class ExchangeRateDaoFake: ExchangeRateDao {
 
     private val rates = MutableStateFlow<List<ExchangeRateEntity>>(emptyList())
 
     override suspend fun save(values: List<ExchangeRateEntity>) {
-        rates.value = values
+//         rates.value = values
+        rates.emit(values)
+        yield() // allows each update to be processed sequentially by the collector
     }
 
     override fun findAllByBaseCurrency(baseCurrency: String): Flow<List<ExchangeRateEntity>> {
