@@ -32,9 +32,11 @@ class ExchangeRatesFlowTest {
     private lateinit var exchangeRateDao: ExchangeRateDaoFake
     private lateinit var exchangeRateOverrideDao: ExchangeRateOverrideDaoFake
 
+    // creates an instance of the MainCoroutineExtension and registers it as an extension
+    // This allows the instance to be passed in to ExchangeRatesFlow(...) as a constructor parameter
     companion object {
         @JvmField
-        @RegisterExtension
+        @RegisterExtension  // instead of @ExtendWith(MainCoroutineExtension::class)
         val mainCoroutineExtension = MainCoroutineExtension()
     }
 
@@ -66,6 +68,7 @@ class ExchangeRatesFlowTest {
         val exchangeRateOverrides = listOf(
             exchangeRateOverrideEntity("CAD", 1.5)
         )
+
         exchangeRatesFlow().test {
             awaitItem() // Initial emission, ignore
 
